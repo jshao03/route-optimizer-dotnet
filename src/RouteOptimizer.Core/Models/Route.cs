@@ -24,5 +24,10 @@ public sealed class Route
         this.routeNodes.Add(node);
         this.cost += edgeCost;
     }
+
+    public IReadOnlyList<string> GetNodeIds()
+    {
+        return routeNodes.Select(n => n.Id).ToList();
+    }
     #endregion
 }
