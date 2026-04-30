@@ -2,10 +2,13 @@ namespace RouteOptimizer.Core.Models;
 
 public sealed class Edge
 {
+    #region Fields
     public string From { get; }
     public string To { get; }
     public double Weight { get; }
+    #endregion
 
+    #region Constructors
     public Edge(string from, string to, double weight)
     {
         if (string.IsNullOrWhiteSpace(from))
@@ -21,4 +24,5 @@ public sealed class Edge
         To = to;
         Weight = weight;
     }
+    #endregion
 }

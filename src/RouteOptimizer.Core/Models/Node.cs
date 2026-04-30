@@ -2,8 +2,11 @@ namespace RouteOptimizer.Core.Models;
 
 public sealed class Node
 {
+    #region Fields
     public string Id { get; }
+    #endregion
 
+    #region Constructors
     public Node(string id)
     {
         if (string.IsNullOrWhiteSpace(id))
@@ -11,4 +14,5 @@ public sealed class Node
 
         Id = id;
     }
+    #endregion
 }
