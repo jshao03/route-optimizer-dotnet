@@ -3,19 +3,19 @@ namespace RouteOptimizer.Core.Models;
 public sealed class Edge
 {
     #region Fields
-    public string From { get; }
-    public string To { get; }
+    public Node From { get; }
+    public Node To { get; }
     public double Weight { get; }
     #endregion
 
     #region Constructors
-    public Edge(string from, string to, double weight)
+    public Edge(Node from, Node to, double weight)
     {
-        if (string.IsNullOrWhiteSpace(from))
-            throw new ArgumentException("From cannot be empty.", nameof(from));
+        if (string.IsNullOrWhiteSpace(from.Id))
+            throw new ArgumentException("From cannot be empty.", nameof(from.Id));
 
-        if (string.IsNullOrWhiteSpace(to))
-            throw new ArgumentException("To cannot be empty.", nameof(to));
+        if (string.IsNullOrWhiteSpace(to.Id))
+            throw new ArgumentException("To cannot be empty.", nameof(to.Id));
 
         if (weight < 0)
             throw new ArgumentOutOfRangeException(nameof(weight), "Weight must be non-negative.");

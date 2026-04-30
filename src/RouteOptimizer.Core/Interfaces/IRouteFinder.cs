@@ -4,5 +4,5 @@ namespace RouteOptimizer.Core.Interfaces;
 
 public interface IRouteFinder
 {
-    RouteResult FindShortestRoute(Graph graph, string source, string destination);
+    RouteResult FindShortestRoute(Graph graph, Node sourceNode, Node destinationNode);
 }

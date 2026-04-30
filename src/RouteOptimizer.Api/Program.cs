@@ -9,7 +9,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton(SampleGraphFactory.Create());
-builder.Services.AddScoped<IRouteFinder, SimpleRouteFinder>();
+builder.Services.AddScoped<IRouteFinder, DijkstraRouteFinder>();
 
 var app = builder.Build();
 
@@ -19,7 +19,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.MapGet("/health", () => Results.Ok(new { status = "healthy" }));
 
@@ -30,7 +30,7 @@ app.MapPost("/route", (RouteRequest request, Graph graph, IRouteFinder routeFind
         return Results.BadRequest(new { error = "Source and destination are required." });
     }
 
-    var result = routeFinder.FindShortestRoute(graph, request.Source, request.Destination);
+    var result = routeFinder.FindShortestRoute(graph, new Node(request.Source), new Node(request.Destination));
 
     return result.RouteFound
         ? Results.Ok(result)

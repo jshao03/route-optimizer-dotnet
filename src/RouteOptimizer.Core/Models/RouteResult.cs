@@ -2,7 +2,7 @@ namespace RouteOptimizer.Core.Models;
 
 public sealed class RouteResult
 {
-    public List<string> Path { get; init; } = [];
-    public double TotalDistance { get; init; }
+    public Route Route { get; init; } = Route.Empty;
+    public double TotalCost { get; init; }
     public bool RouteFound { get; init; }
 }

@@ -1,17 +1,19 @@
+using RouteOptimizer.Core.Models;
+
 namespace RouteOptimizer.Core.DataStructures;
 
 public sealed class MinHeapPriorityQueue
 {
     #region Fields
-    private readonly List<(string NodeId, double Priority)> heap = [];
+    private readonly List<(Node Node, double Priority)> heap = [];
 
     public int Count => heap.Count;
     #endregion
 
     #region Methods
-    public void Enqueue(string nodeId, double priority)
+    public void Enqueue(Node node, double priority)
     {
-        heap.Add((nodeId, priority));
+        heap.Add((node, priority));
         HeapifyUp(heap.Count - 1);
     }
 
@@ -21,7 +23,7 @@ public sealed class MinHeapPriorityQueue
     /// </summary>
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
-    public (string NodeId, double Priority) Dequeue()
+    public (Node Node, double Priority) Dequeue()
     {
         if (heap.Count == 0)
             throw new InvalidOperationException("The priority queue is empty.");
@@ -45,7 +47,7 @@ public sealed class MinHeapPriorityQueue
     /// </summary>
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
-    public (string NodeId, double Priority) Peek()
+    public (Node NodeId, double Priority) Peek()
     {
         if (heap.Count == 0)
             throw new InvalidOperationException("The priority queue is empty.");

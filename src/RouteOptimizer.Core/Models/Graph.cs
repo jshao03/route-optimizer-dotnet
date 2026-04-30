@@ -3,21 +3,21 @@ namespace RouteOptimizer.Core.Models;
 public sealed class Graph
 {
     #region Fields
-    private readonly Dictionary<string, List<Edge>> adjacency = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<Node, List<Edge>> adjacency = new();
 
-    public IReadOnlyDictionary<string, List<Edge>> Adjacency => adjacency;
+    public IReadOnlyDictionary<Node, List<Edge>> Adjacency => adjacency;
     #endregion
 
     #region Methods
-    public void AddNode(string nodeId)
+    public void AddNode(Node node)
     {
-        if (!adjacency.ContainsKey(nodeId))
+        if (!adjacency.ContainsKey(node))
         {
-            adjacency[nodeId] = new List<Edge>();
+            adjacency[node] = [];
         }
     }
 
-    public void AddEdge(string from, string to, double weight)
+    public void AddEdge(Node from, Node to, double weight)
     {
         AddNode(from);
         AddNode(to);
@@ -25,13 +25,13 @@ public sealed class Graph
         adjacency[from].Add(new Edge(from, to, weight));
     }
 
-    public IReadOnlyList<Edge> GetNeighbors(string nodeId)
+    public IReadOnlyList<Edge> GetNeighbors(Node node)
     {
-        return adjacency.TryGetValue(nodeId, out var edges)
+        return adjacency.TryGetValue(node, out var edges)
             ? edges
             : Array.Empty<Edge>();
     }
 
-    public bool ContainsNode(string nodeId) => adjacency.ContainsKey(nodeId);
+    public bool ContainsNode(Node node) => adjacency.ContainsKey(node);
     #endregion
 }
