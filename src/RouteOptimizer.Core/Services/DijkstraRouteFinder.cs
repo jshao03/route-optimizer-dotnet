@@ -1,30 +1,61 @@
 using RouteOptimizer.Core.Interfaces;
 using RouteOptimizer.Core.Models;
 using RouteOptimizer.Core.DataStructures;
-using System.Collections.Concurrent;
+using Microsoft.Extensions.Logging;
 
 namespace RouteOptimizer.Core.Services;
 
 public sealed class DijkstraRouteFinder : IRouteFinder
 {
+    #region Fields
+    private readonly ILogger<DijkstraRouteFinder> logger;
+    private readonly Dictionary<string, RouteResult> cache = new(StringComparer.OrdinalIgnoreCase);
+    #endregion
+
+    #region egion Constructor
+    public DijkstraRouteFinder(ILogger<DijkstraRouteFinder> logger)
+    {
+        this.logger = logger;
+    }
+    #endregion
+
+    #region Methods
     public RouteResult FindShortestRoute(Graph graph, Node sourceNode, Node destinationNode)
     {
+        logger.LogInformation("Finding shortest route from {Source} to {Destination}", sourceNode.Id, destinationNode.Id);
+        var cacheKey = $"{sourceNode.Id}:{destinationNode.Id}";
+
+        if (cache.TryGetValue(cacheKey, out var cachedResult))
+        {
+            logger.LogInformation("Cache hit for route {Source} -> {Destination}", sourceNode.Id, destinationNode.Id);
+            return cachedResult;
+        }
+
         if (!graph.ContainsNode(sourceNode) || !graph.ContainsNode(destinationNode))
         {
-            return new RouteResult
+            logger.LogWarning("Source or destination node not found. Source: {Source}, Destination: {Destination}", sourceNode.Id, destinationNode.Id);
+            var result = new RouteResult
             {
                 RouteFound = false
             };
+            cache[cacheKey] = result;
+
+            return result;
         }
 
         if (string.Equals(sourceNode.Id, destinationNode.Id, StringComparison.OrdinalIgnoreCase))
         {
-            return new RouteResult
+            logger.LogInformation("Source and destination are the same node: {Node}", sourceNode.Id);
+
+            var result = new RouteResult
             {
                 RouteFound = true,
                 Route = new Route([sourceNode], 0f),
                 TotalCost = 0
             };
+            cache[cacheKey] = result;
+
+            return result;
         }
 
         var visited = new HashSet<Node>();
@@ -47,12 +78,16 @@ public sealed class DijkstraRouteFinder : IRouteFinder
 
             if (node == destinationNode)
             {
-                return new RouteResult
+                var result = new RouteResult
                 {
                     RouteFound = true,
                     Route = shortestPathMap[node],
                     TotalCost = priority
                 };
+                cache[cacheKey] = result;
+                logger.LogInformation("Route found from {Source} to {Destination} with total distance {Distance}", sourceNode.Id, destinationNode.Id, result.TotalCost);
+
+                return result;
             }
 
             var neighbors = graph.GetNeighbors(node);
@@ -84,9 +119,14 @@ public sealed class DijkstraRouteFinder : IRouteFinder
             visited.Add(node);
         }
 
-        return new RouteResult
+        var failedResult = new RouteResult
         {
             RouteFound = false
         };
+        cache[cacheKey] = failedResult;
+        logger.LogInformation("Route not exist from {Source} to {Destination}", sourceNode.Id, destinationNode.Id);
+
+        return failedResult;
     }
+    #endregion
 }
