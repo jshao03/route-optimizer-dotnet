@@ -198,6 +198,20 @@ Then open Swagger in the browser using the local URL shown in the console, for e
 http://localhost:5034/swagger
 ```
 
+## Running with Docker
+
+Build the image:
+
+```bash
+docker build -t route-optimizer-dotnet .
+```
+
+Run the container:
+
+```bash
+docker run -p 8080:8080 route-optimizer-dotnet
+```
+
 ## Running Tests
 
 ```bash
@@ -238,7 +252,6 @@ A few deliberate tradeoffs were made:
 
 Possible next steps:
 
-- Docker support
 - benchmark comparison between implementations
 - A\* search for heuristic-guided routing
 - persistent graph storage
