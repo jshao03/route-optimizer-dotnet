@@ -1,5 +1,3 @@
-using System.Diagnostics.Contracts;
-
 namespace RouteOptimizer.Core.Models;
 
 public sealed class Node
@@ -25,8 +23,7 @@ public sealed class Node
         {
             return false;
         }
-
-        return string.Equals(this.Id, other.Id, StringComparison.OrdinalIgnoreCase);
+        return string.Equals(Id, other.Id, StringComparison.OrdinalIgnoreCase);
     }
 
     public override bool Equals(object? obj)

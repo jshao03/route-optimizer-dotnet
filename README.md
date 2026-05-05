@@ -248,11 +248,47 @@ A few deliberate tradeoffs were made:
 - The current cache eviction policy is intentionally simple.
 - Dijkstra was chosen as a strong baseline before exploring A\* or larger-scale optimizations.
 
+## Benchmark Notes
+
+A simple benchmark was run to compare cached and uncached route lookups across three request patterns.
+
+Benchmark setup:
+
+- graph size: 50 nodes with additional shortcut edges
+- cache size: 100 entries
+- iterations per scenario: 10,000
+
+### Results
+
+#### Repeated identical
+
+- uncached total time: `273.0843 ms`
+- cached total time: `1.262 ms`
+- approximate speedup: `216.39x`
+
+#### Mixed hot + random
+
+- uncached total time: `175.0282 ms`
+- cached total time: `40.937 ms`
+- approximate speedup: `4.28x`
+
+#### Fully random
+
+- uncached total time: `117.176 ms`
+- cached total time: `114.0827 ms`
+- approximate speedup: `1.03x`
+
+### Interpretation
+
+These results show that the bounded in-memory cache provides the most benefit when route lookups repeat or cluster around a smaller set of popular paths. In mixed workloads, caching still reduced repeated-query overhead meaningfully. In fully random workloads, cache reuse was low, so performance remained close to the uncached baseline.
+
+This benchmark was intended as a practical comparison rather than a formal microbenchmark.
+
 ## Future Improvements
 
 Possible next steps:
 
-- benchmark comparison between implementations
+- cache improvement based on graph properties to choose the hot routes
 - A\* search for heuristic-guided routing
 - persistent graph storage
 - richer observability and metrics

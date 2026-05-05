@@ -13,6 +13,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{5575974A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RouteOptimizer.Tests", "tests\RouteOptimizer.Tests\RouteOptimizer.Tests.csproj", "{17A834F8-20A9-428C-B5BD-52C67A6680ED}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmarks", "benchmarks", "{7D3A153B-419C-453A-89E2-57F98BA181E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RouteOptimizer.Benchmarks", "benchmarks\RouteOptimizer.Benchmarks\RouteOptimizer.Benchmarks.csproj", "{7A2F0B0F-EFA4-4A69-BE54-C1B359D7597D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,10 +38,15 @@ Global
 		{17A834F8-20A9-428C-B5BD-52C67A6680ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17A834F8-20A9-428C-B5BD-52C67A6680ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17A834F8-20A9-428C-B5BD-52C67A6680ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A2F0B0F-EFA4-4A69-BE54-C1B359D7597D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A2F0B0F-EFA4-4A69-BE54-C1B359D7597D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A2F0B0F-EFA4-4A69-BE54-C1B359D7597D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A2F0B0F-EFA4-4A69-BE54-C1B359D7597D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{5F59AA9F-F254-4857-B4E0-58103449BFF5} = {119CC671-DF8D-4CFA-A0B6-0F0E7CB399F5}
 		{CC81C26A-6A76-498A-9615-A2DD0F88087C} = {119CC671-DF8D-4CFA-A0B6-0F0E7CB399F5}
 		{17A834F8-20A9-428C-B5BD-52C67A6680ED} = {5575974A-33A0-4D2E-9A78-13DB92384E0C}
+		{7A2F0B0F-EFA4-4A69-BE54-C1B359D7597D} = {7D3A153B-419C-453A-89E2-57F98BA181E6}
 	EndGlobalSection
 EndGlobal
