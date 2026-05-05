@@ -2,14 +2,18 @@ using RouteOptimizer.Core.Interfaces;
 using RouteOptimizer.Core.Models;
 using RouteOptimizer.Core.DataStructures;
 using Microsoft.Extensions.Logging;
-
+using System.Collections.Concurrent;
 namespace RouteOptimizer.Core.Services;
 
 public sealed class DijkstraRouteFinder : IRouteFinder
 {
     #region Fields
     private readonly ILogger<DijkstraRouteFinder> logger;
-    private readonly Dictionary<string, RouteResult> cache = new(StringComparer.OrdinalIgnoreCase);
+    private const int MaxCacheSize = 100;
+
+    private readonly ConcurrentDictionary<string, RouteResult> cache = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Queue<string> cacheOrder = new();
+    private readonly object cacheLock = new();
     #endregion
 
     #region egion Constructor
@@ -84,7 +88,7 @@ public sealed class DijkstraRouteFinder : IRouteFinder
                     Route = shortestPathMap[node],
                     TotalCost = priority
                 };
-                cache[cacheKey] = result;
+                AddToCache(cacheKey, result);
                 logger.LogInformation("Route found from {Source} to {Destination} with total distance {Distance}", sourceNode.Id, destinationNode.Id, result.TotalCost);
 
                 return result;
@@ -123,10 +127,36 @@ public sealed class DijkstraRouteFinder : IRouteFinder
         {
             RouteFound = false
         };
-        cache[cacheKey] = failedResult;
+        AddToCache(cacheKey, failedResult);
         logger.LogInformation("Route not exist from {Source} to {Destination}", sourceNode.Id, destinationNode.Id);
 
         return failedResult;
+    }
+
+    /// <summary>
+    /// add RouteResult to the cache
+    /// remove the oldest entry if cache size exceeds the limit
+    /// </summary>
+    /// <param name="cacheKey"></param>
+    /// <param name="result"></param>
+    private void AddToCache(string cacheKey, RouteResult result)
+    {
+        lock (cacheLock)
+        {
+            if (cache.ContainsKey(cacheKey))
+            {
+                return;
+            }
+
+            if (cache.Count >= MaxCacheSize)
+            {
+                var oldestKey = cacheOrder.Dequeue();
+                cache.TryRemove(oldestKey, out _);
+            }
+
+            cache[cacheKey] = result;
+            cacheOrder.Enqueue(cacheKey);
+        }
     }
     #endregion
 }

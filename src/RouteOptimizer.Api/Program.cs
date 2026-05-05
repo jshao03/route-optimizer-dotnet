@@ -9,7 +9,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton(SampleGraphFactory.Create());
-builder.Services.AddScoped<IRouteFinder, DijkstraRouteFinder>();
+builder.Services.AddSingleton<IRouteFinder, DijkstraRouteFinder>();
 
 var app = builder.Build();
 
