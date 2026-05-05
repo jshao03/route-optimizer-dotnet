@@ -3,13 +3,15 @@ using RouteOptimizer.Core.Models;
 using RouteOptimizer.Core.DataStructures;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
+using Microsoft.Extensions.Options;
+using RouteOptimizer.Core.Configuration;
 namespace RouteOptimizer.Core.Services;
 
 public sealed class DijkstraRouteFinder : IRouteFinder
 {
     #region Fields
     private readonly ILogger<DijkstraRouteFinder> logger;
-    private const int MaxCacheSize = 100;
+    private readonly int maxCacheSize;
 
     private readonly ConcurrentDictionary<string, RouteResult> cache = new(StringComparer.OrdinalIgnoreCase);
     private readonly Queue<string> cacheOrder = new();
@@ -17,9 +19,10 @@ public sealed class DijkstraRouteFinder : IRouteFinder
     #endregion
 
     #region egion Constructor
-    public DijkstraRouteFinder(ILogger<DijkstraRouteFinder> logger)
+    public DijkstraRouteFinder(ILogger<DijkstraRouteFinder> logger, IOptions<RouteSettings> routeSettings)
     {
         this.logger = logger;
+        this.maxCacheSize = routeSettings.Value.MaxCacheSize;
     }
     #endregion
 
@@ -148,7 +151,7 @@ public sealed class DijkstraRouteFinder : IRouteFinder
                 return;
             }
 
-            if (cache.Count >= MaxCacheSize)
+            if (cache.Count >= maxCacheSize)
             {
                 var oldestKey = cacheOrder.Dequeue();
                 cache.TryRemove(oldestKey, out _);

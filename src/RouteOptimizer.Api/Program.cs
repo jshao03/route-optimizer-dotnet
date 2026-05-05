@@ -2,8 +2,12 @@ using RouteOptimizer.Core.Data;
 using RouteOptimizer.Core.Interfaces;
 using RouteOptimizer.Core.Models;
 using RouteOptimizer.Core.Services;
+using RouteOptimizer.Core.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Register the route settings
+builder.Services.Configure<RouteSettings>(builder.Configuration.GetSection("RouteSettings"));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

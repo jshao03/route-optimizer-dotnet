@@ -15,6 +15,7 @@ The API accepts a source and destination node and returns the shortest weighted 
 - Dijkstra shortest-path algorithm
 - custom min-heap priority queue
 - bounded in-memory route cache
+- config-driven route cache size
 - structured logging
 - unit tests for correctness and edge cases
 - Swagger support for local API testing
@@ -111,6 +112,7 @@ Repeated route queries are stored in a bounded in-memory cache.
 Current cache design:
 
 - keyed by source/destination pair
+- maximum cache size is configurable through application settings
 - bounded to avoid unbounded memory growth
 - oldest entries are evicted when the cache reaches capacity
 
@@ -171,11 +173,24 @@ Returns the shortest route between two nodes.
 
 - .NET 8 SDK
 
+## Configuration
+
+Route cache behavior can be adjusted through application settings.
+
+Example:
+
+````json
+{
+  "RouteSettings": {
+    "MaxCacheSize": 100
+  }
+}
+
 ### Run the API
 
 ```bash
 dotnet run --project src/RouteOptimizer.Api
-```
+````
 
 Then open Swagger in the browser using the local URL shown in the console, for example:
 
@@ -224,7 +239,6 @@ A few deliberate tradeoffs were made:
 Possible next steps:
 
 - Docker support
-- config-driven cache settings
 - benchmark comparison between implementations
 - A\* search for heuristic-guided routing
 - persistent graph storage

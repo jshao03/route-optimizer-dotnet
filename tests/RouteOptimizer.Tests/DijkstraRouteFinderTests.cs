@@ -1,6 +1,8 @@
 using Microsoft.Extensions.Logging.Abstractions;
 using RouteOptimizer.Core.Models;
 using RouteOptimizer.Core.Services;
+using Microsoft.Extensions.Options;
+using RouteOptimizer.Core.Configuration;
 
 namespace RouteOptimizer.Tests;
 
@@ -26,11 +28,21 @@ public sealed class DijkstraRouteFinderTests
         return graph;
     }
 
+    private static IOptions<RouteSettings> CreateRouteSettings(int maxCacheSize = 100)
+    {
+        var routeSettings = new RouteSettings
+        {
+            MaxCacheSize = maxCacheSize
+        };
+
+        return Options.Create(routeSettings);
+    }
+
     [Fact]
     public void FindShortestRoute_ReturnsShortestWeightedPath()
     {
         var graph = CreateSampleGraph();
-        var routeFinder = new DijkstraRouteFinder(NullLogger<DijkstraRouteFinder>.Instance);
+        var routeFinder = new DijkstraRouteFinder(NullLogger<DijkstraRouteFinder>.Instance, CreateRouteSettings());
 
         var result = routeFinder.FindShortestRoute(graph, new Node("A"), new Node("D"));
 
@@ -43,7 +55,7 @@ public sealed class DijkstraRouteFinderTests
     public void FindShortestRoute_ReturnsSingleNodePath_WhenSourceEqualsDestination()
     {
         var graph = CreateSampleGraph();
-        var routeFinder = new DijkstraRouteFinder(NullLogger<DijkstraRouteFinder>.Instance);
+        var routeFinder = new DijkstraRouteFinder(NullLogger<DijkstraRouteFinder>.Instance, CreateRouteSettings());
 
         var result = routeFinder.FindShortestRoute(graph, new Node("A"), new Node("A"));
 
@@ -58,7 +70,7 @@ public sealed class DijkstraRouteFinderTests
         var graph = CreateSampleGraph();
         graph.AddNode(new Node("Z"));
 
-        var routeFinder = new DijkstraRouteFinder(NullLogger<DijkstraRouteFinder>.Instance);
+        var routeFinder = new DijkstraRouteFinder(NullLogger<DijkstraRouteFinder>.Instance, CreateRouteSettings());
 
         var result = routeFinder.FindShortestRoute(graph, new Node("A"), new Node("Z"));
 
@@ -70,7 +82,7 @@ public sealed class DijkstraRouteFinderTests
     public void FindShortestRoute_ReturnsNoRoute_WhenSourceNodeDoesNotExist()
     {
         var graph = CreateSampleGraph();
-        var routeFinder = new DijkstraRouteFinder(NullLogger<DijkstraRouteFinder>.Instance);
+        var routeFinder = new DijkstraRouteFinder(NullLogger<DijkstraRouteFinder>.Instance, CreateRouteSettings());
 
         var result = routeFinder.FindShortestRoute(graph, new Node("X"), new Node("D"));
 
@@ -88,7 +100,7 @@ public sealed class DijkstraRouteFinderTests
         graph.AddEdge(new Node("E"), new Node("D"), 1);
         graph.AddEdge(new Node("B"), new Node("D"), 1);
 
-        var routeFinder = new DijkstraRouteFinder(NullLogger<DijkstraRouteFinder>.Instance);
+        var routeFinder = new DijkstraRouteFinder(NullLogger<DijkstraRouteFinder>.Instance, CreateRouteSettings());
 
         var result = routeFinder.FindShortestRoute(graph, new Node("A"), new Node("D"));
 
