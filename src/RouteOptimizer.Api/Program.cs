@@ -8,6 +8,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Register the route settings
 builder.Services.Configure<RouteSettings>(builder.Configuration.GetSection("RouteSettings"));
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("frontend", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -17,6 +27,7 @@ builder.Services.AddSingleton<IRouteFinder, DijkstraRouteFinder>();
 
 var app = builder.Build();
 
+app.UseCors("frontend");
 app.UseSwagger();
 app.UseSwaggerUI();
 
