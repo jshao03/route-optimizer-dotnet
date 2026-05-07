@@ -1,6 +1,6 @@
 import type { RouteResponse } from "../types/route";
 
-const API_BASE = "http://localhost:5034";
+const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:5034";
 
 export async function findRoute(
   source: string,

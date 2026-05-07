@@ -6,6 +6,7 @@ COPY RouteOptimizer.sln ./
 COPY src/RouteOptimizer.Api/RouteOptimizer.Api.csproj src/RouteOptimizer.Api/
 COPY src/RouteOptimizer.Core/RouteOptimizer.Core.csproj src/RouteOptimizer.Core/
 COPY tests/RouteOptimizer.Tests/RouteOptimizer.Tests.csproj tests/RouteOptimizer.Tests/
+COPY benchmarks/RouteOptimizer.Benchmarks/RouteOptimizer.Benchmarks.csproj benchmarks/RouteOptimizer.Benchmarks/
 
 RUN dotnet restore
 
