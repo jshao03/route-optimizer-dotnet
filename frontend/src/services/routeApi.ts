@@ -15,7 +15,7 @@ export async function findRoute(
   });
 
   const data = await response.json();
-  debugger;
+
   if (!response.ok) {
     throw new Error(data.error ?? "Route lookup failed.");
   }
