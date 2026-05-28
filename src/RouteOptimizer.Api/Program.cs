@@ -23,7 +23,17 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton(SampleGraphFactory.Create());
-builder.Services.AddSingleton<IRouteFinder, DijkstraRouteFinder>();
+builder.Services.AddStackExchangeRedisCache(options =>
+
+{
+
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+
+    options.InstanceName = "RouteOptimizer:";
+
+});
+builder.Services.AddSingleton<DijkstraRouteFinder>();
+builder.Services.AddSingleton<IRouteFinder, RedisCachedRouteFinder>();
 
 var app = builder.Build();
 
